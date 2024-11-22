@@ -1,9 +1,2 @@
-
-        "fName": "Test",
-        "lName": "User",
-        "email": "test@gmail.com",
-        "password": "$2b$10$fW30DnMUS9BnF9kG8kk6Oe8ygrYmS2t5E.GdRxpE.u2UYFLKuzi6m",
-        "phoneNumber": 9834567816,
-        "age": 19,
-        "gender": "male",
-        "photoUrl": "https://akshaysaini.in/img/akshay.jpg",
+{likes? <p className="text-lg">{likes.length}<i className="fa-regular fa-heart text-lg mx-2 cursor-pointer"></i></p>:<p className="text-lg">0<i className="fa-regular fa-heart text-lg  cursor-pointer"></i></p>}
+clear everything after logout (likes hinders)

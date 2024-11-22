@@ -14,7 +14,8 @@ export const CreatePost = () =>{
     const navigator = useNavigate();
     const createPost = async()=>{
         try{
-            const result = await axios.post(`${backendBaseUrl}/post/createpost`,{title,photoUrl},{withCredentials:true})
+            const result = await axios.post(`${backendBaseUrl}/post/createpost`,{title,postImgUrl:photoUrl},{withCredentials:true});
+            console.log(result)
             setToastActive(true);
             setTimeout(()=>{setToastActive(false)},1500);
             dispatch(addSinglePost(result.data.post))
