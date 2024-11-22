@@ -27,6 +27,7 @@ export const Navbar = () =>{
                     <Link to="/" className="btn btn-ghost text-xl">DEV-Overflow</Link>
                 </div>
             <div className="flex-none">
+                <p className="text-sm me-4">{userData.fName}</p>
                 <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                     <div className="w-10 rounded-full">
