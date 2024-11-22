@@ -10,7 +10,7 @@ export const Feed = () =>{
     const dispatch = useDispatch();
     const user = useSelector(appStore=>appStore.user)
     const loginUser = async() =>{
-        const userInfo = await axios.get(`${backendBaseUrl}/getloggedinuser`,{withCredentials:true})
+        const userInfo = await axios.get(`${backendBaseUrl}/user/getloggedinuser`,{withCredentials:true})
         dispatch(addUser(userInfo.data.user));
     }
     useEffect(()=>{

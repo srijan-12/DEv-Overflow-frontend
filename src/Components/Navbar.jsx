@@ -13,7 +13,7 @@ export const Navbar = () =>{
 
     const handleLogout = async() =>{
         try{
-            const result = await axios.post(`${backendBaseUrl}/logout`,{},{withCredentials:true});
+            const result = await axios.post(`${backendBaseUrl}/user/logout`,{},{withCredentials:true});
             dispatch(removeUser());
             navigator("/login")
         }catch(err){    

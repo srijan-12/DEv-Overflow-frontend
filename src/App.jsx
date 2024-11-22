@@ -4,14 +4,15 @@ import { Login } from "./Components/login"
 import {Provider} from "react-redux"
 import appStore from "./Utilities/store"
 import { Feed } from "./Components/Feed"
+import { backendBaseUrl } from "./Utilities/constants"
 function App() {
   return (
    <>
    <Provider store={appStore}>
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/api/user">
       <Routes>
         <Route path="/" element={<Body/>}>
-        <Route path="/" element={<Feed/>}/>
+        <Route path="" element={<Feed/>}/>
         <Route path="/login" element={<Login/>}/>
         </Route>
       </Routes>
