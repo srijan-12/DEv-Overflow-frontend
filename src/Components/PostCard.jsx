@@ -9,15 +9,19 @@ export const PostCard = ({post}) =>{
     const {title,postImgUrl,_id,userId,likes,comment} = post;
     const[isOwner, setIsOwner] = useState(false);
     const[postLike, setPostLike] = useState(likes.length);
+    const[postComment, setPostComment] = useState(comment.length);
     const[likeRed, setLikeRed] = useState(false);
     const[showComment, setShowComment] = useState(false);
+    const[showAllComments, setShowAllComments] = useState(false);
+    const[cmntArray, setCmntArray] = useState([]);
+    const[content, setContent] = useState("");
     const dispatch = useDispatch();
     const navigator = useNavigate();
 
     const user = useSelector(appStore=>appStore.user)
     const loggedInUserId = user._id;
     const postId = _id;
-    
+
     const checkValidUser =(loggedInUserId,userId) =>{
         if(loggedInUserId === userId){
             setIsOwner(true)
@@ -41,8 +45,21 @@ export const PostCard = ({post}) =>{
         }
     }
 
-    const handleComment = async(postId)=>{
-        //yet to do via populate in db
+    const handleComment = ()=>{
+        setShowComment(!showComment)
+    }
+
+    const handlePostComment = async(postId) =>{
+        try{
+            const result = await axios.post(`${backendBaseUrl}/comment/addcomment/${postId}`,{content: content},{withCredentials:true})
+            setShowComment(false);
+            setPostComment("")
+            setPostComment(result.data.comment.length)
+            
+        }catch(err){
+            console.log(err)
+        }
+
     }
 
     const handleDelete = async(postId)=>{
@@ -57,6 +74,16 @@ export const PostCard = ({post}) =>{
         }
     }
 
+    const handleShowAllComments = async(postId)=>{
+        try{
+            const commentArray = await axios.get(`${backendBaseUrl}/comment/getallcomments/${postId}`,{withCredentials:true})
+            setShowAllComments(!showAllComments);
+            setCmntArray(commentArray);
+        }catch{
+            console.log(err)
+        }
+    }
+
 
     useEffect(()=>{
         checkValidUser(loggedInUserId,userId);
@@ -64,7 +91,7 @@ export const PostCard = ({post}) =>{
     
     return(
         <div className="w-5/12 mx-auto my-10 mb-20">
-        {post && <div className="card bg-base-200 h-[400px] shadow-xl">
+        {post && <div className="card bg-base-200 h-[600px] shadow-xl">
             {postImgUrl && <figure className="mt-8">
                 <img
                 src={postImgUrl}
@@ -81,8 +108,17 @@ export const PostCard = ({post}) =>{
                         {<p>{postLike}<i className={`fa-regular fa-heart text-lg mx-2 cursor-pointer ${likeRed ? "text-red-500" : "text-white-500"}`}></i></p>}
                     </div>
 
-                    <div onClick={()=>handleComment(postId)}>
-                        {comment? <p className="text-lg">{comment.length}<i className="fa-regular fa-comment text-lg mx-2 cursor-pointer"></i></p>:<p className="text-lg">0<i className="fa-regular fa-comment text-lg mx-2  cursor-pointer"></i></p>}
+                    <div>
+                        {comment? <p className="text-lg">{postComment}<i className="fa-regular fa-comment text-lg mx-2 cursor-pointer" onClick={()=>handleComment(postId)}></i></p>:<p className="text-lg">{postComment}<i className="fa-regular fa-comment text-lg mx-2  cursor-pointer" onClick={()=>handleComment(postId)}></i></p>}
+                        {showComment && <div className="my-4">
+                            <textarea className="textarea textarea-secondary" placeholder="Express your views" value={content} onChange={(e)=>setContent(e.target.value)}></textarea>
+                            <button className="btn btn-primary mx-6" onClick={()=>handlePostComment(postId)}>Post</button>
+                        </div>}
+                    </div>
+
+                    <div>
+                        <div onClick={()=>handleShowAllComments(postId)}><i class="fa-regular fa-eye"></i></div>
+                        {showAllComments && cmntArray?.data?.commentArray?.map((c)=> <p className="text-xs border m-2 p-2">{c.content}</p>)}
                     </div>
 
                 {isOwner && <>
