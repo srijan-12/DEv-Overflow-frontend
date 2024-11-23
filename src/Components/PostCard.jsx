@@ -1,17 +1,23 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { backendBaseUrl } from "../Utilities/constants";
+import {Link, useNavigate} from "react-router-dom"
+import { removeSinglePost } from "../Utilities/PostSlice";
 
 export const PostCard = ({post}) =>{
     const {title,postImgUrl,_id,userId,likes,comment} = post;
     const[isOwner, setIsOwner] = useState(false);
     const[postLike, setPostLike] = useState(likes.length);
     const[likeRed, setLikeRed] = useState(false);
+    const[showComment, setShowComment] = useState(false);
+    const dispatch = useDispatch();
+    const navigator = useNavigate();
 
     const user = useSelector(appStore=>appStore.user)
     const loggedInUserId = user._id;
     const postId = _id;
+    
     const checkValidUser =(loggedInUserId,userId) =>{
         if(loggedInUserId === userId){
             setIsOwner(true)
@@ -34,6 +40,24 @@ export const PostCard = ({post}) =>{
             console.log(err);
         }
     }
+
+    const handleComment = async(postId)=>{
+        //yet to do via populate in db
+    }
+
+    const handleDelete = async(postId)=>{
+        try{
+            console.log(postId);
+            const result = await axios.delete(`${backendBaseUrl}/post/deletepost/${postId}`,{withCredentials:true});
+            console.log(result);
+            dispatch(removeSinglePost(postId));
+            navigator("/")
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+
     useEffect(()=>{
         checkValidUser(loggedInUserId,userId);
     },[])
@@ -57,11 +81,15 @@ export const PostCard = ({post}) =>{
                         {<p>{postLike}<i className={`fa-regular fa-heart text-lg mx-2 cursor-pointer ${likeRed ? "text-red-500" : "text-white-500"}`}></i></p>}
                     </div>
 
-                {comment? <p className="text-lg">{comment.length}<i className="fa-regular fa-comment text-lg mx-2 cursor-pointer"></i></p>:<p className="text-lg">0<i className="fa-regular fa-comment text-lg mx-2  cursor-pointer"></i></p>}
+                    <div onClick={()=>handleComment(postId)}>
+                        {comment? <p className="text-lg">{comment.length}<i className="fa-regular fa-comment text-lg mx-2 cursor-pointer"></i></p>:<p className="text-lg">0<i className="fa-regular fa-comment text-lg mx-2  cursor-pointer"></i></p>}
+                    </div>
 
-                {isOwner && <><i className="fa-solid fa-pen-to-square text-lg"></i>
+                {isOwner && <>
+                <div><Link to={`/updatepost/${postId}`}><i className="fa-solid fa-pen-to-square text-lg"></i></Link></div>
 
-                <i className="fa-solid fa-trash text-lg"></i></>}
+                <div onClick={()=>handleDelete(postId)}><i className="fa-solid fa-trash text-lg"></i></div>
+                </>}
                 </div>
             </div>
         </div>}

@@ -6,6 +6,7 @@ import appStore from "./Utilities/store"
 import { Feed } from "./Components/Feed"
 import { Profile } from "./Components/Profile"
 import { CreatePost } from "./Components/CreatePost"
+import { EditPost } from "./Components/EditPost"
 function App() {
   return (
    <>
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login/>}/>
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/createpost" element={<CreatePost/>}/>
+        <Route path="/updatepost/:id" element={<EditPost/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

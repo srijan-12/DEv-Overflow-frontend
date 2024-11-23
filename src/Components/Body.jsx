@@ -6,6 +6,7 @@ import { backendBaseUrl } from "../Utilities/constants"
 import { useDispatch, useSelector } from "react-redux"
 import appStore from "../Utilities/store"
 import { addUser } from "../Utilities/loggedInUserSlice"
+import { addPost } from "../Utilities/PostSlice"
 import { useEffect } from "react"
 
 export const Body = () => {
@@ -20,6 +21,7 @@ export const Body = () => {
             console.log(err);
         }
     }
+    
     useEffect(()=>{
         getLoggedInUser();
     },[])
